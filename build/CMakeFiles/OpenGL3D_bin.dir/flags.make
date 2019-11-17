@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOS
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/eigen -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/include 
+CXX_INCLUDES = -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/eigen -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glm/glm -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/include 
 

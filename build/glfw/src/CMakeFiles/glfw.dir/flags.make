@@ -6,7 +6,7 @@ C_FLAGS =  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -f
 
 C_DEFINES = -D_GLFW_USE_CONFIG_H
 
-C_INCLUDES = -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/eigen -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/include -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/build/glfw/src 
+C_INCLUDES = -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/eigen -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glm/glm -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/include -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/ext/glfw/src -I/Users/sarjakthakkar/Documents/MacBook/NYU/Lectures/ICG/opengl3D/build/glfw/src 
 
 # Custom flags: glfw/src/CMakeFiles/glfw.dir/context.c.o_FLAGS = -Wdeclaration-after-statement
 

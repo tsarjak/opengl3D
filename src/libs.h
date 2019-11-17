@@ -9,6 +9,11 @@
 #include <Eigen/Core>
 #include <GLFW/glfw3.h>
 
+#include <glm.hpp>
+#include <vec2.hpp>
+#include <vec3.hpp>
+#include <vec4.hpp>
+#include <mat4x4.hpp>
 #ifdef _WIN32
 #  include <windows.h>
 #  undef max

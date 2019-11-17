@@ -33,6 +33,9 @@ set(LIBRARIES ${OPENGL_LIBRARIES})
 ### Include Eigen for linear algebra
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen")
 
+### Include GLM for linear algebra
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/glm")
+
 ### Compile GLFW3 statically
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL " " FORCE)

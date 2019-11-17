@@ -12,6 +12,7 @@ set(CMAKE_CXX_COMPILER_ID "Clang")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../src"
   "../ext/eigen"
+  "../ext/glm/glm"
   "../ext/glfw/include"
   )
 

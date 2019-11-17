@@ -31,6 +31,7 @@ set(CMAKE_TARGET_DEFINITIONS_C
 set(CMAKE_C_TARGET_INCLUDE_PATH
   "../src"
   "../ext/eigen"
+  "../ext/glm/glm"
   "../ext/glfw/include"
   "../ext/glfw/src"
   "glfw/src"
