@@ -7,6 +7,92 @@ void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH){
   glViewport(0, 0, fbW, fbH);
 }
 
+bool loadShaders(GLuint &program){
+
+  bool loadSuccess = true;
+  char infolog[512];
+  GLint success;
+
+  string temp = "";
+  string src = "";
+
+  ifstream in_file;
+
+  // VertexShader
+  in_file.open("../src/shaders/vertex_core.glsl");
+
+  if(in_file.is_open()){
+    while(getline(in_file, temp))
+      src += temp + "\n";
+  } else {
+    cout << "ERROR::loadShaders::Couldn't open vertex file" << "\n";
+  }
+
+  in_file.close();
+
+  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  const GLchar* vertSrc = src.c_str();
+  glShaderSource(vertexShader, 1, &vertSrc, NULL);
+  glCompileShader(vertexShader);
+
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if (!success){
+    glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
+    cout<<"ERROR::loadshaders::could not compile vertex shaders" << "\n";
+    cout<<infolog<<"\n";
+  }
+
+  temp = "";
+  src = "";
+
+  // Fragment Shader
+  in_file.open("../src/shaders/fragment_core.glsl");
+
+  if(in_file.is_open()){
+    while(getline(in_file, temp))
+      src += temp + "\n";
+  } else {
+    cout << "ERROR::loadShaders::Couldn't open fragment file" << "\n";
+  }
+
+  in_file.close();
+
+  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  const GLchar* fragSrc = src.c_str();
+  glShaderSource(fragmentShader, 1, &fragSrc, NULL);
+  glCompileShader(fragmentShader);
+
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+  if (!success){
+    glGetShaderInfoLog(fragmentShader, 512, NULL, infolog);
+    cout<<"ERROR::loadshaders::could not compile fragment shaders" << "\n";
+    cout<<infolog<<"\n";
+  }
+
+  // Program
+  program = glCreateProgram();
+  glAttachShader(program, vertexShader);
+  glAttachShader(program, fragmentShader);
+
+  glLinkProgram(program);
+
+  glGetProgramiv(program, GL_LINK_STATUS, &success);
+  if(!success){
+    glGetProgramInfoLog(program, 512, NULL, infolog);
+    cout<<"ERROR::LOADSHADERS::could not link program" << "\n";
+    cout<<infolog;
+    loadSuccess = false;
+  }
+
+
+  // End
+  glUseProgram(0);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+
+  return loadSuccess;
+}
+
 int main(void){
 
   // Initialize GLFW
@@ -49,6 +135,13 @@ int main(void){
       glfwTerminate();
     }
   #endif
+
+
+  // Shader Init
+  GLuint core_program;
+  if(!loadShaders(core_program)){
+      glfwTerminate();
+  }
 
   // Main Loop
   while (!glfwWindowShouldClose(window)){
