@@ -16,6 +16,7 @@
 #include <vec3.hpp>
 #include <vec4.hpp>
 #include <mat4x4.hpp>
+#include "vertex.h"
 #ifdef _WIN32
 #  include <windows.h>
 #  undef max
@@ -38,8 +39,28 @@
 #   include <GL/gl.h>
 #endif
 
-// Timer
-#include <chrono>
-
 #include "shader.h"
-#include "material.h"
+
+class Material{
+
+private:
+  glm::vec3 ambient;
+  glm::vec3 diffuse;
+  glm::vec3 specular;
+
+public:
+  Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular){
+    this->ambient = ambient;
+    this->diffuse = diffuse;
+    this->specular = specular;
+  }
+
+  ~Material(){}
+
+  //Functions
+  void sendToShader(Shader& program){
+    program.setVec3f(this->ambient, "material.ambient");
+    program.setVec3f(this->diffuse, "material.diffuse");
+    program.setVec3f(this->specular, "material.specular");
+  }
+};

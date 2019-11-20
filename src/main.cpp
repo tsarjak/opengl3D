@@ -225,6 +225,9 @@ int main(void){
   //Bind
   glBindVertexArray(0);
 
+
+  Material material0(glm::vec3(0.1f), glm::vec3(0.4f), glm::vec3(1.f));
+
   glm::vec3 position(0.f);
   glm::vec3 rotation(0.f);
   glm::vec3 scale(1.f);
@@ -278,7 +281,7 @@ int main(void){
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-
+    material0.sendToShader(core_program);
     //Move. rotate and scale
 
     ModelMatrix = glm::mat4(1.f);
