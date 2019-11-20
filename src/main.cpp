@@ -195,6 +195,7 @@ int main(void){
   Shader core_program("../src/shaders/vertex_core.glsl", "../src/shaders/fragment_core.glsl");
 
   //MODEL
+  Mesh test(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
 
   //VAO, VBO, EBO
 
