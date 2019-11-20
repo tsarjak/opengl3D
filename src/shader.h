@@ -44,6 +44,7 @@
 
 class Shader{
 private:
+  GLuint id;
 
   std::string loadShaderSource(char* fileName){
     std::string temp = "";
@@ -119,7 +120,7 @@ private:
   }
 
 public:
-  GLuint id;
+
   Shader(char* vertexFile = "", char* fragmentFile = "", char* geometryFile = ""){
     GLuint vertexShader = 0;
     GLuint geometryShader = 0;

@@ -192,13 +192,7 @@ int main(void){
     }
   #endif
 
-  Shader test("../src/shaders/vertex_core.glsl", "../src/shaders/fragment_core.glsl");
-
-  // Shader Init
-  GLuint core_program;
-  if(!loadShaders(core_program)){
-      glfwTerminate();
-  }
+  Shader core_program("../src/shaders/vertex_core.glsl", "../src/shaders/fragment_core.glsl");
 
   //MODEL
 
@@ -223,24 +217,10 @@ int main(void){
 
 
   //Set Vertex Array Attribs
-  //Position
-  GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
-  glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
-  glEnableVertexAttribArray(attribLoc);
-
-  //Color
-  GLuint attribLoc_2 = glGetAttribLocation(core_program, "vertex_color");
-  glVertexAttribPointer(attribLoc_2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
-  glEnableVertexAttribArray(attribLoc_2);
-
-  //Texture Coordinate
-  GLuint attribLoc_3 = glGetAttribLocation(core_program, "vertex_texcoord");
-  glVertexAttribPointer(attribLoc_3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
-  glEnableVertexAttribArray(attribLoc_3);
-
-  GLuint attribLoc_4 = glGetAttribLocation(core_program, "vertex_normal");
-  glVertexAttribPointer(attribLoc_4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
-  glEnableVertexAttribArray(attribLoc_4);
+  core_program.setAttribLocation("vertex_position", 3, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+  core_program.setAttribLocation("vertex_color", 3, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+  core_program.setAttribLocation("vertex_texcoord", 2, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+  core_program.setAttribLocation("vertex_normal", 3, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 
   //Bind
   glBindVertexArray(0);
@@ -271,15 +251,14 @@ int main(void){
 
   glm::vec3 lightPos0(0.f, 0.f, 1.f);
 
+  core_program.use();
 
-  glUseProgram(core_program);
+  core_program.setMat4fv(ModelMatrix, "ModelMatrix");
+  core_program.setMat4fv(ViewMatrix, "ViewMatrix");
+  core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
-  glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
-  glUniformMatrix4fv(glGetUniformLocation(core_program, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(ViewMatrix));
-  glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
-
-  glUniform3fv(glGetUniformLocation(core_program, "lightPos0"), 1, glm::value_ptr(lightPos0));
-  glUniform3fv(glGetUniformLocation(core_program, "cameraPos"), 1, glm::value_ptr(camPosition));
+  core_program.setVec3f(lightPos0, "lightPos0");
+  core_program.setVec3f(camPosition, "cameraPos");
 
   glUseProgram(0);
 
@@ -300,9 +279,6 @@ int main(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 
-    //Use Program
-    glUseProgram(core_program);
-
     //Move. rotate and scale
 
     ModelMatrix = glm::mat4(1.f);
@@ -312,20 +288,22 @@ int main(void){
     ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
     ModelMatrix = glm::scale(ModelMatrix, scale);
 
-    glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
-    //glUniformMatrix4fv(glGetUniformLocation(core_program, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+
+    core_program.setMat4fv(ModelMatrix, "ModelMatrix");
     glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 
     ProjectionMatrix = glm::mat4(1.f);
-    ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
 
-    glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+
+    ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+    core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
     //Bind vertex array object
     glBindVertexArray(VAO);
 
 
     // Draw
+    core_program.use();
     glDrawElements(GL_TRIANGLES, nrOfIndices, GL_UNSIGNED_INT, 0);
 
 
