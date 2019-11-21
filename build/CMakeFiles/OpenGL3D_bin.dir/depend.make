@@ -369,6 +369,7 @@ CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../ext/glm/glm/vec2.hpp
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../ext/glm/glm/vec3.hpp
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../ext/glm/glm/vec4.hpp
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../ext/glm/glm/vector_relational.hpp
+CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../src/camera.h
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../src/libs.h
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/OpenGL3D_bin.dir/src/main.cpp.o: ../src/material.h
