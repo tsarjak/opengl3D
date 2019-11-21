@@ -212,13 +212,13 @@ int main(void){
   //Mesh mesh(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
 
   std::vector<Mesh> meshes;
-  Mesh mesh("../src/meshes/bunny.off", &core_program, 8.f);
-  Mesh mesh2("../src/meshes/bumpy_cube.off", &core_program, 0.2f,glm::vec3(-1.f,0.f,0.f));
-  Mesh mesh3("../src/meshes/unit_cube.off", &core_program, 1.f,glm::vec3(+1.f,0.f,0.f));
+  //Mesh mesh("../src/meshes/bunny.off", &core_program, 8.f);
+  //Mesh mesh2("../src/meshes/bumpy_cube.off", &core_program, 0.2f,glm::vec3(-1.f,0.f,0.f));
+  //Mesh mesh3("../src/meshes/unit_cube.off", &core_program, 1.f,glm::vec3(+1.f,0.f,0.f));
 
-  meshes.push_back(mesh);
-  meshes.push_back(mesh3);
-  meshes.push_back(mesh2);
+  //meshes.push_back(Mesh("../src/meshes/bunny.off", &core_program, 8.f));
+  //meshes.push_back(mesh3);
+  //meshes.push_back(mesh2);
 
 
   numberOfMeshes = meshes.size();
@@ -265,11 +265,24 @@ int main(void){
   while (!glfwWindowShouldClose(window)){
 
 
-    //std::cout<<sizeof(vertices)/sizeof(*vertices);
-
     // Update input
     glfwPollEvents();
 
+
+    //Check insert condition
+    if (insert_now != 0){
+      if (insert_now == 1){
+      meshes.push_back(Mesh("../src/meshes/bunny.off", &core_program, 8.f));
+    } else if (insert_now == 2){
+      meshes.push_back(Mesh("../src/meshes/bumpy_cube.off", &core_program, 0.2f));
+    } else if (insert_now == 3){
+      meshes.push_back(Mesh("../src/meshes/unit_cube.off", &core_program, 1.f));
+    }
+      numberOfMeshes = meshes.size();
+      insert_now = 0;
+    }
+
+    //Check Selection
     for(int i = 0; i < numberOfMeshes; i++){
         meshes[i].unsetSelected();
     }
@@ -279,10 +292,7 @@ int main(void){
       moveMesh(window, meshes[curr_selected]);
     }
 
-    moveMesh(window, mesh2);
-
-    //updateInput(window, meshes[0]);
-
+    //move Camera if any button clicked
     moveCamera(window, cam);
 
     //Update
@@ -306,15 +316,9 @@ int main(void){
     // Draw
     core_program.use();
 
-    //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    //meshes[0].render(&core_program);
-
-    for (int j=0;j<3;j++){
+    for (int j=0;j<numberOfMeshes;j++){
       meshes[j].render(&core_program);
     }
-
-    //mesh_2.render(&core_program);
-
 
     // End Draw
     glfwSwapBuffers(window);

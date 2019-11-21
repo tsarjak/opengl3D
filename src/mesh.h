@@ -380,7 +380,7 @@ public:
     shader->use();
     glBindVertexArray(this->VAO);
 
-    //
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays(GL_TRIANGLES, this->originalVertices, this->nrOfIndices);//this->nrOfIndices, GL_UNSIGNED_INT, 0);
 
