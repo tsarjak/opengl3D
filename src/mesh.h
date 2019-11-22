@@ -67,6 +67,8 @@ private:
   glm::vec3 scale;
   glm::mat4 ModelMatrix;
 
+  int renderMode;
+
   void compute_normals(std::vector<Vertex> vertex_vector,
     const unsigned&  nrOfVertices,
     GLuint* indexArray,
@@ -78,6 +80,7 @@ private:
       GLuint v3;
 
       std::vector<glm::vec3> perFaceNormals;
+      std::vector<glm::vec3> perVertexNormals;
 
       Vertex temp_vertex;
       temp_vertex.color = glm::vec3(1.f, 0.f, 0.f);
@@ -97,7 +100,7 @@ private:
         glm::vec3 e2 = vertex_vector[v3].position - vertex_vector[v1].position;
 
         glm::vec3 tri_normal = glm::cross(e1, e2);
-        perFaceNormals.push_back(tri_normal);
+        perFaceNormals.push_back(normalize(tri_normal));
 
         temp_vertex.position = vertex_vector[v1].position;
         temp_vertex.normal = normalize(tri_normal);
@@ -116,12 +119,43 @@ private:
       this->originalVertices = nrOfVertices;
 
       //Calculating per vertex Normals
+      for (int i=0;i <this->originalVertices; i++){
+        glm::vec3 sumPerVertex(0.f);
+        float countPerVertex = 0;
+
+        for (int j=0; j<perFaceNormals.size();j++){
+          int temp_curr_index = j*3;
+          if (indexArray[temp_curr_index] == i || indexArray[temp_curr_index+1] == i|| indexArray[temp_curr_index+2] == i){
+            sumPerVertex += perFaceNormals[j];
+            countPerVertex += 1.;
+          }
+        }
+
+        sumPerVertex = normalize(sumPerVertex / countPerVertex);
+
+        perVertexNormals.push_back(sumPerVertex);
+        //std::cout<<"Perverted Normals"<<perVertexNormals[0][1]<<"\n";
+      }
+
+      std::cout<<"Per vertex normals count : "<<perVertexNormals.size()<<"\n";
 
 
-      Vertex vertices_[nrOfVertices + nrOfIndices];
+      //Adding per vertex normals to the VBO
+      for (int i=0; i<nrOfIndices;i++){
+        Vertex temp_vertex_;
+        temp_vertex_ = vertex_vector[indexArray[i]];
+        temp_vertex_.color = glm::vec3(1.f,0.f,0.f);
+        temp_vertex_.normal = perVertexNormals[indexArray[i]];
+        vertex_vector.push_back(temp_vertex_);
+      }
+
+      cout<<"Total Vertex Countn: "<<vertex_vector.size()<<"\n";
+
+
+      Vertex vertices_[nrOfVertices + nrOfIndices + nrOfIndices];
       std::copy(vertex_vector.begin(), vertex_vector.end(), vertices_);
 
-      this->initVAO(vertices_, nrOfVertices + nrOfIndices, indexArray, nrOfIndices, shader);
+      this->initVAO(vertices_, nrOfVertices + nrOfIndices + nrOfIndices, indexArray, nrOfIndices, shader);
 
     }
 
@@ -326,13 +360,15 @@ public:
       float scaleFactor,
       glm::vec3 position = glm::vec3(0.f),
       glm::vec3 rotation = glm::vec3(0.f),
-      glm::vec3 scale = glm::vec3(1.f)
+      glm::vec3 scale = glm::vec3(1.f),
+      int renderMode = 0
     ){
       this->position = position;
       this->rotation = rotation;
       this->scale = scale;
       this->selected = 0.f;
       this->scaleFactor = scaleFactor;
+      this->renderMode = renderMode;
       this->read_from_file(fileName, shader);
       this->updateModelMatrix();
     }
@@ -380,15 +416,29 @@ public:
     shader->use();
     glBindVertexArray(this->VAO);
 
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawArrays(GL_TRIANGLES, this->originalVertices, this->nrOfIndices);//this->nrOfIndices, GL_UNSIGNED_INT, 0);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
+    if (this->renderMode != 2){
+      if (this->renderMode == 1){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glDrawArrays(GL_TRIANGLES, this->originalVertices, this->nrOfIndices);//this->nrOfIndices, GL_UNSIGNED_INT, 0);
+      }
+
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
+
+  }
+  if (this->renderMode == 2){
+    cout<<"Render Mode 2"<<"\n";
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLES, this->originalVertices + this->nrOfIndices, this->nrOfIndices);
+  }
 
     glBindVertexArray(0);
 
+  }
+
+  void changeRenderMode(int renderMode){
+    this->renderMode = renderMode;
   }
 
   void setSelected(){

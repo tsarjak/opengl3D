@@ -99,7 +99,6 @@ public:
   }
 
   void changeSphere(glm::vec3 sphericalChange){
-    std::cout<<"Now changing sphere"<<"\n";
     this->sphereCoordinates += sphericalChange;
     float x = this->sphereCoordinates[0] * sin (this->sphereCoordinates[1]*PI/180) * cos (this->sphereCoordinates[2]*PI/180);
     float y = this->sphereCoordinates[0] * sin (this->sphereCoordinates[1]*PI/180) * sin (this->sphereCoordinates[2]*PI/180);

@@ -3,29 +3,11 @@
 #include "libs.h"
 using namespace std;
 
-Vertex vertices[]={
-  glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f, 0.f, 1.f),
-  glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(0.f, 0.f),glm::vec3(0.f, 0.f, 1.f),
-  glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f),glm::vec3(0.f, 0.f, 1.f),
-
-  glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f, 1.f, 0.f),
-  glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f),glm::vec3(0.f, 0.f, 1.f),
-  glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f),glm::vec3(0.f, 0.f, 1.f)
-};
-
-unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
-
-GLuint indices[] =  {
-  0, 1, 2,
-  0, 2, 3
-};
-
-unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
-
 int numberOfMeshes = 0;
 int curr_selected = -1;
 int insert_now = 0;
 
+std::vector<Mesh> meshes;
 
 void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH){
   glViewport(0, 0, fbW, fbH);
@@ -63,27 +45,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       }
   }
 }
-
-// int selectMesh(GLFWwindow* window, int numberOfMeshes, int curr_selected){
-//   if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
-//     std::cout<<"\nPressed : ";
-//     curr_selected += 1;
-//
-//       if (curr_selected >= numberOfMeshes){
-//       curr_selected -= 1;
-//     }
-//   }
-//
-//   if(glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS){
-//     curr_selected -= 1;
-//     if (curr_selected == -2){
-//       curr_selected += 1;
-//       return curr_selected;
-//     }
-//   }
-//
-//   return curr_selected;
-// }
 
 void moveCamera(GLFWwindow* window, Camera &cam){
   if(glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS){ //Move up
@@ -145,12 +106,20 @@ void moveMesh(GLFWwindow* window, Mesh &mesh){
     mesh.scaleUp(glm::vec3(-0.001f));
   }
 
+  if(glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS){
+    mesh.changeRenderMode(0);
+  }
+  if(glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS){
+    mesh.changeRenderMode(1);
+  }
+  if(glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS){
+    mesh.changeRenderMode(2);
+  }
+
+
 }
 
 int main(void){
-
-  //Needed Variables
-
 
   // Initialize GLFW
   if(!glfwInit()){
@@ -211,7 +180,7 @@ int main(void){
   //Mesh mesh(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
   //Mesh mesh(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
 
-  std::vector<Mesh> meshes;
+
   //Mesh mesh("../src/meshes/bunny.off", &core_program, 8.f);
   //Mesh mesh2("../src/meshes/bumpy_cube.off", &core_program, 0.2f,glm::vec3(-1.f,0.f,0.f));
   //Mesh mesh3("../src/meshes/unit_cube.off", &core_program, 1.f,glm::vec3(+1.f,0.f,0.f));
@@ -292,6 +261,9 @@ int main(void){
       moveMesh(window, meshes[curr_selected]);
     }
 
+    //Check renderMode
+
+
     //move Camera if any button clicked
     moveCamera(window, cam);
 
@@ -315,6 +287,7 @@ int main(void){
 
     // Draw
     core_program.use();
+
 
     for (int j=0;j<numberOfMeshes;j++){
       meshes[j].render(&core_program);
