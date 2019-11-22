@@ -428,7 +428,6 @@ public:
 
   }
   if (this->renderMode == 2){
-    cout<<"Render Mode 2"<<"\n";
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays(GL_TRIANGLES, this->originalVertices + this->nrOfIndices, this->nrOfIndices);
   }

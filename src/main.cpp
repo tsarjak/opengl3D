@@ -6,7 +6,7 @@ using namespace std;
 int numberOfMeshes = 0;
 int curr_selected = -1;
 int insert_now = 0;
-
+int projectionType = 0;
 std::vector<Mesh> meshes;
 
 void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH){
@@ -42,6 +42,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
           case GLFW_KEY_3:
             insert_now = 3;
             break;
+
+          case GLFW_KEY_SPACE:
+            if(projectionType == 0){
+              projectionType = 1;
+            } else {
+              projectionType = 0;
+            }
       }
   }
 }
@@ -176,25 +183,8 @@ int main(void){
   #endif
 
   Shader core_program("../src/shaders/vertex_core.glsl", "../src/shaders/fragment_core.glsl");
-  //MODEL
-  //Mesh mesh(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
-  //Mesh mesh(vertices, nrOfVertices, indices, nrOfIndices, &core_program);
-
-
-  //Mesh mesh("../src/meshes/bunny.off", &core_program, 8.f);
-  //Mesh mesh2("../src/meshes/bumpy_cube.off", &core_program, 0.2f,glm::vec3(-1.f,0.f,0.f));
-  //Mesh mesh3("../src/meshes/unit_cube.off", &core_program, 1.f,glm::vec3(+1.f,0.f,0.f));
-
-  //meshes.push_back(Mesh("../src/meshes/bunny.off", &core_program, 8.f));
-  //meshes.push_back(mesh3);
-  //meshes.push_back(mesh2);
-
 
   numberOfMeshes = meshes.size();
-
-  //meshes.push_back(mesh);
-  //meshes.push_back(mesh_2);
-  //"../src/meshes/bumpy_cube.off"
 
   Material material0(glm::vec3(0.1f), glm::vec3(0.4f), glm::vec3(1.f));
 
@@ -203,24 +193,23 @@ int main(void){
   glm::vec3 camCenter(0.f, 0.f, 0.f);
   glm::vec3 sphereCoordinates = glm::vec3(2.f,0.f,0.f);
   Camera cam(2, &core_program, worldUp, camPosition, camCenter, sphereCoordinates);
-  // glm::mat4  ViewMatrix(1.f);
-  // ViewMatrix = glm::lookAt(camPosition, camPosition + camFront, worldUp);
 
   float fov = 90.f;
   float nearPlane = 0.1f;
   float farPlane = 100.f;
+
   glm::mat4 ProjectionMatrix(1.f);
 
-  //ProjectionMatrix = glm::ortho(0, 640, 480, 0, 0, 1000);
-
-  ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+  if (projectionType == 0){
+    ProjectionMatrix = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f);
+  } else {
+    ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+  }
 
   glm::vec3 lightPos0(0.f, 0.f, 1.f);
 
   core_program.use();
 
-  //core_program.setMat4fv(ModelMatrix, "ModelMatrix");
-  //core_program.setMat4fv(ViewMatrix, "ViewMatrix");
   core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
   core_program.setVec3f(lightPos0, "lightPos0");
@@ -282,7 +271,14 @@ int main(void){
 
     ProjectionMatrix = glm::mat4(1.f);
 
-    ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+    if (projectionType == 0){
+      ProjectionMatrix = glm::ortho(-2.0f,2.0f,-2.0f,2.0f,0.0f,100.0f);
+    } else {
+      ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+    }
+
+    //ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+    //ProjectionMatrix = glm::ortho(-2.0f,2.0f,-2.0f,2.0f,0.0f,100.0f);
     core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
     // Draw
